@@ -11,6 +11,15 @@ export default function Home() {
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
 
+  function redirectForRole(role: string | null | undefined) {
+    if (role === "ngo") {
+      window.location.href = "/ngo-register";
+    } else {
+      // default to CSR flow, also covers first-time Google users with no role yet
+      window.location.href = "/domains";
+    }
+  }
+
   async function handleCredentialsAuth(role: "csr" | "ngo") {
     setError("");
 
@@ -36,7 +45,7 @@ export default function Home() {
     if (result?.error) {
       setError("Invalid email or password");
     } else {
-      window.location.href = "/";
+      redirectForRole(role);
     }
   }
 
@@ -100,7 +109,7 @@ export default function Home() {
 
           {/* Google login — separate, clearly optional path */}
           <button
-            onClick={() => signIn("google", { callbackUrl: "/" })}
+            onClick={() => signIn("google", { callbackUrl: "/domains" })}
             className="w-full rounded-full bg-field-grey px-5 py-3 mb-5 text-sm font-medium flex items-center justify-center gap-2"
           >
             Continue with Google
@@ -145,9 +154,7 @@ export default function Home() {
           )}
           {mode === "register" && <div className="mb-4" />}
 
-          {error && (
-            <p className="text-danger text-xs mb-3">{error}</p>
-          )}
+          {error && <p className="text-danger text-xs mb-3">{error}</p>}
 
           <button
             onClick={() => handleCredentialsAuth("csr")}
