@@ -1,0 +1,69 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model NGO {
+  id                Int      @id @default(autoincrement())
+  name              String
+  verified          Boolean  @default(false)
+  domain            String
+  city              String
+  state             String
+  address           String?
+  budgetMin         Int
+  budgetMax         Int
+  yearsActive       Int
+  impactMetric      String
+  description       String
+  photoUrl          String?
+  has12A            Boolean  @default(false)
+  has80G            Boolean  @default(false)
+  hasFCRA           Boolean  @default(false)
+  pastCSRPartners   String?
+  createdAt         DateTime @default(now())
+
+  shortlists        Shortlist[]
+  eois              EOI[]
+}
+
+model CSRMandate {
+  id                    Int      @id @default(autoincrement())
+  userId                String
+  domains               String
+  state                 String
+  city                  String
+  budgetMin             Int
+  budgetMax             Int
+  yearsActiveMin        Int?
+  projectTimeline       String?
+  verificationRequired  String?
+  createdAt             DateTime @default(now())
+}
+
+model Shortlist {
+  id        Int      @id @default(autoincrement())
+  userId    String
+  ngoId     Int
+  rank      Int?
+  status    String   @default("shortlisted")
+  createdAt DateTime @default(now())
+
+  ngo       NGO      @relation(fields: [ngoId], references: [id])
+}
+
+model EOI {
+  id              Int      @id @default(autoincrement())
+  fromUserId      String
+  toNgoId         Int
+  message         String
+  proposedBudget  Int?
+  status          String   @default("pending")
+  createdAt       DateTime @default(now())
+
+  ngo             NGO      @relation(fields: [toNgoId], references: [id])
+}
