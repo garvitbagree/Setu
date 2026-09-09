@@ -4,6 +4,7 @@ import { useState, useMemo } from "react";
 import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
 import Navbar from "../components/Navbar";
+import Footer from "../components/Footer";
 
 const domainImages: Record<string, string> = {
   Education: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ24rFdwBst_qbltc-AhGcLbiBOy7zxWx5XoB2JHnxuL7WuWCawDv98c9A&s=10",
@@ -59,38 +60,39 @@ export default function DomainsPage() {
       state,
       city,
     });
-    router.push(`/additional-features?${params.toString()}`);
+    router.push(`/matching?${params.toString()}`);
   }
 
   const allDomains = showMore ? [...initialDomains, ...moreDomains] : initialDomains;
 
   return (
-    <main className="min-h-screen bg-[#F7F5FC] px-8 lg:px-24 py-16 w-full flex flex-col justify-between">
+    <main className="h-screen bg-[#F7F5FC] w-full flex flex-col overflow-hidden">
       <Navbar />
-      <div>
-        {/* Progress bar */}
-        <div className="w-full h-2 rounded-full bg-white border border-lavender overflow-hidden mb-2 mt-10">
-          <div className="h-full bg-lavender w-1/2" />
-        </div>
-        <p className="text-right text-sm text-muted mb-10">1/2</p>
 
-        <h1 className="font-sans font-extrabold text-5xl mb-3">
+      <div className="px-8 lg:px-24 py-4 flex-1 flex flex-col min-h-0">
+        {/* Progress bar */}
+        <div className="w-full h-4 rounded-full bg-white border-2 border-lavender overflow-hidden mb-2 mt-4">
+          <div className="h-full bg-lavender rounded-full w-1/2" />
+        </div>
+        <p className="text-right text-sm text-muted mb-4">1/2</p>
+
+        <h1 className="font-sans font-extrabold text-4xl mb-2">
           Hola <span className="text-deep-purple">{firstName}.</span>
         </h1>
-        <p className="text-xl mb-10">What NGO domains are you searching for?</p>
+        <p className="text-lg mb-6">What NGO domains are you searching for?</p>
 
-        <div className="flex gap-6 mb-6">
+        <div className="flex gap-4 mb-3">
           {allDomains.map((domain) => (
             <button
               key={domain}
               onClick={() => toggleDomain(domain)}
-              className={`relative rounded-2xl overflow-hidden h-56 flex-1 bg-skeleton-grey text-left ${
+              className={`relative rounded-2xl overflow-hidden h-36 flex-1 bg-skeleton-grey text-left ${
                 selected.includes(domain) ? "ring-4 ring-lavender" : ""
               }`}
               style={{
                 backgroundImage: domainImages[domain] ? `url(${domainImages[domain]})` : undefined,
                 backgroundSize: "cover",
-                backgroundPosition: "center",
+                backgroundPosition: domain === "Livelihood" ? "center 15%" : "center",
               }}
             >
               <span className="absolute bottom-0 left-0 right-0 bg-black/50 text-white font-semibold text-sm px-3 py-2 truncate">
@@ -103,14 +105,14 @@ export default function DomainsPage() {
         {!showMore && (
           <button
             onClick={() => setShowMore(true)}
-            className="text-right block ml-auto font-semibold mb-12"
+            className="text-right block ml-auto font-semibold mb-4"
           >
             Load more...
           </button>
         )}
 
-        <p className="text-xl font-semibold mb-4 mt-4">What geography are you looking for?</p>
-        <div className="flex gap-4 mb-16 relative">
+        <p className="text-lg font-semibold mb-3 mt-2">What geography are you looking for?</p>
+        <div className="flex gap-4 mb-4 relative">
           <div className="relative">
             <input
               type="text"
@@ -122,7 +124,7 @@ export default function DomainsPage() {
               }}
               onFocus={() => setStateFocused(true)}
               onBlur={() => setTimeout(() => setStateFocused(false), 150)}
-              className="rounded-full bg-field-grey px-5 py-3 text-sm outline-none w-60"
+              className="rounded-full bg-field-grey px-5 py-2.5 text-sm outline-none w-60"
             />
             {stateFocused && state && stateOptions.length > 0 && (
               <div className="absolute top-full mt-1 w-60 bg-white rounded-xl shadow-lg z-10 overflow-hidden">
@@ -148,7 +150,7 @@ export default function DomainsPage() {
               onFocus={() => setCityFocused(true)}
               onBlur={() => setTimeout(() => setCityFocused(false), 150)}
               disabled={!state}
-              className="rounded-full bg-field-grey px-5 py-3 text-sm outline-none w-60 disabled:opacity-50"
+              className="rounded-full bg-field-grey px-5 py-2.5 text-sm outline-none w-60 disabled:opacity-50"
             />
             {cityFocused && cityOptions.length > 0 && (
               <div className="absolute top-full mt-1 w-60 bg-white rounded-xl shadow-lg z-10 overflow-hidden">
@@ -165,20 +167,22 @@ export default function DomainsPage() {
             )}
           </div>
         </div>
+
+        <div className="flex justify-end items-center gap-6 mt-auto pb-4">
+          <a href="#" className="font-bold text-sm">
+            + Additional filters
+          </a>
+          <button
+            onClick={handleNext}
+            disabled={selected.length === 0}
+            className="rounded-full bg-lavender px-8 py-3 font-bold disabled:opacity-40"
+          >
+            Proceed to suggested NGOs
+          </button>
+        </div>
       </div>
 
-      <div className="flex justify-between items-center pb-10">
-        <a href="#" className="font-bold">
-          Additional filters
-        </a>
-        <button
-          onClick={handleNext}
-          disabled={selected.length === 0}
-          className="rounded-full bg-lavender px-8 py-3 font-bold disabled:opacity-40"
-        >
-          Next
-        </button>
-      </div>
+      <Footer />
     </main>
   );
 }

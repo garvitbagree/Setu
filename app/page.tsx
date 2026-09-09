@@ -15,7 +15,6 @@ export default function Home() {
     if (role === "ngo") {
       window.location.href = "/ngo-register";
     } else {
-      // default to CSR flow, also covers first-time Google users with no role yet
       window.location.href = "/domains";
     }
   }
@@ -50,7 +49,7 @@ export default function Home() {
   }
 
   return (
-    <main className="relative min-h-screen">
+    <main className="relative h-screen overflow-hidden flex flex-col">
       {/* Background image */}
       <div className="absolute inset-0 -z-10">
         <Image
@@ -63,7 +62,7 @@ export default function Home() {
       </div>
 
       {/* Navbar */}
-      <nav className="sticky top-0 z-10 flex items-center justify-between px-8 py-4 bg-white/20 backdrop-blur-md">
+      <nav className="sticky top-0 z-10 flex items-center justify-between px-8 py-3 bg-white/20 backdrop-blur-md shrink-0">
         <span className="font-serif text-2xl tracking-widest text-white">
           SETU
         </span>
@@ -79,24 +78,24 @@ export default function Home() {
       </nav>
 
       {/* Hero content */}
-      <div className="flex items-center justify-between px-16 py-24 max-w-[1200px] mx-auto">
+      <div className="flex-1 flex items-center justify-between px-16 max-w-[1200px] mx-auto w-full min-h-0">
         {/* Left: headline */}
         <div className="max-w-xl">
-          <p className="text-white tracking-widest text-sm mb-4">SETU</p>
-          <h1 className="text-white font-bold text-5xl leading-tight">
+          <p className="text-white tracking-widest text-sm mb-3">SETU</p>
+          <h1 className="text-white font-bold text-4xl leading-tight">
             Your friendly neighbourhood
             <br />
             <span className="text-lavender-light">CSR-NGO</span>
             <br />
             matching platform
           </h1>
-          <div className="w-40 border-t border-white mt-6" />
+          <div className="w-40 border-t border-white mt-5" />
         </div>
 
         {/* Right: login card */}
-        <div className="bg-white rounded-2xl p-8 w-96 shadow-xl">
-          <div className="flex justify-between items-center mb-6">
-            <h2 className="font-serif text-3xl font-bold text-deep-purple">
+        <div className="bg-white rounded-2xl p-6 w-96 shadow-xl">
+          <div className="flex justify-between items-center mb-4">
+            <h2 className="font-serif text-2xl font-bold text-deep-purple">
               {mode === "login" ? "Holaaaa!" : "Join Setu"}
             </h2>
             <button
@@ -107,15 +106,14 @@ export default function Home() {
             </button>
           </div>
 
-          {/* Google login — separate, clearly optional path */}
           <button
             onClick={() => signIn("google", { callbackUrl: "/domains" })}
-            className="w-full rounded-full bg-field-grey px-5 py-3 mb-5 text-sm font-medium flex items-center justify-center gap-2"
+            className="w-full rounded-full bg-field-grey px-5 py-2.5 mb-4 text-sm font-medium flex items-center justify-center gap-2"
           >
             Continue with Google
           </button>
 
-          <div className="flex items-center gap-3 mb-5">
+          <div className="flex items-center gap-3 mb-4">
             <div className="flex-1 border-t border-gray-300" />
             <span className="text-gray-400 text-sm">or use email</span>
             <div className="flex-1 border-t border-gray-300" />
@@ -127,7 +125,7 @@ export default function Home() {
               placeholder="Name"
               value={name}
               onChange={(e) => setName(e.target.value)}
-              className="w-full rounded-full bg-field-grey px-5 py-3 mb-3 text-sm outline-none"
+              className="w-full rounded-full bg-field-grey px-5 py-2.5 mb-3 text-sm outline-none"
             />
           )}
           <input
@@ -135,44 +133,44 @@ export default function Home() {
             placeholder="Email Id"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            className="w-full rounded-full bg-field-grey px-5 py-3 mb-3 text-sm outline-none"
+            className="w-full rounded-full bg-field-grey px-5 py-2.5 mb-3 text-sm outline-none"
           />
           <input
             type="password"
             placeholder="Password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
-            className="w-full rounded-full bg-field-grey px-5 py-3 mb-2 text-sm outline-none"
+            className="w-full rounded-full bg-field-grey px-5 py-2.5 mb-2 text-sm outline-none"
           />
 
           {mode === "login" && (
-            <div className="text-right mb-4">
+            <div className="text-right mb-3">
               <a href="#" className="text-danger text-xs">
                 Forgot password?
               </a>
             </div>
           )}
-          {mode === "register" && <div className="mb-4" />}
+          {mode === "register" && <div className="mb-3" />}
 
-          {error && <p className="text-danger text-xs mb-3">{error}</p>}
+          {error && <p className="text-danger text-xs mb-2">{error}</p>}
 
           <button
             onClick={() => handleCredentialsAuth("csr")}
-            className="w-full rounded-full bg-lavender px-5 py-3 mb-3 font-bold"
+            className="w-full rounded-full bg-lavender px-5 py-2.5 mb-2 font-bold"
           >
             {mode === "login" ? "Login" : "Register"} as CSR Manager
           </button>
           <button
             onClick={() => handleCredentialsAuth("ngo")}
-            className="w-full rounded-full bg-white border-2 border-navy px-5 py-3 font-bold"
+            className="w-full rounded-full bg-white border-2 border-navy px-5 py-2.5 font-bold"
           >
             {mode === "login" ? "Login" : "Register"} as NGO representative
           </button>
         </div>
       </div>
 
-      {/* Footer gradient band */}
-      <div className="h-32 bg-gradient-to-br from-[#6B4FA0] to-navy flex items-center justify-center gap-10 text-white/80 text-sm font-medium">
+      {/* Footer band */}
+      <div className="h-14 shrink-0 bg-gradient-to-br from-[#6B4FA0]/80 to-navy/90 flex items-center justify-center gap-8 text-white/80 text-xs font-medium">
         <a href="#">Company</a>
         <a href="#">FAQs</a>
         <a href="#">Financial Report</a>

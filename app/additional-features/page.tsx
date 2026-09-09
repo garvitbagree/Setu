@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import Navbar from "../components/Navbar";
+import Footer from "../components/Footer";
 
 const yearsOptions = ["Any", "1+ years", "3+ years", "5+ years", "10+ years"];
 const timelineOptions = ["Any", "Under 3 months", "3-6 months", "6 months - 1 year", "1+ years"];
@@ -48,8 +49,8 @@ export default function AdditionalFeaturesPage() {
 
       <div className="px-8 lg:px-24 py-4 flex-1 flex flex-col min-h-0">
         {/* Progress bar */}
-        <div className="w-full h-2 rounded-full bg-white border border-lavender overflow-hidden mb-2 mt-4">
-          <div className="h-full bg-lavender w-full" />
+        <div className="w-full h-4 rounded-full bg-white border-2 border-lavender overflow-hidden mb-2 mt-4">
+          <div className="h-full bg-lavender rounded-full w-full" />
         </div>
         <p className="text-right text-sm text-muted mb-4">2/2</p>
 
@@ -183,7 +184,7 @@ export default function AdditionalFeaturesPage() {
         </div>
 
         {/* Buttons */}
-        <div className="flex justify-between items-center mt-auto pt-6 pb-6 max-w-4xl">
+        <div className="flex justify-between items-center mt-auto pt-6 pb-6 w-full">
           <button
             onClick={() => router.push("/domains")}
             className="rounded-full bg-white border border-gray-300 px-8 py-3 font-bold"
@@ -198,6 +199,7 @@ export default function AdditionalFeaturesPage() {
           </button>
         </div>
       </div>
+      <Footer />
     </main>
   );
 }
