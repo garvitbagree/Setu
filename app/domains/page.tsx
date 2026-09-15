@@ -67,6 +67,15 @@ export default function DomainsPage() {
     router.push(`/matching?${params.toString()}`);
   }
 
+  function handleAdditionalFilters() {
+    const params = new URLSearchParams({
+      domains: selected.join(","),
+      state,
+      city,
+    });
+    router.push(`/additional-features?${params.toString()}`);
+  }
+
   const allDomains = showMore ? [...initialDomains, ...moreDomains] : initialDomains;
 
   return (
@@ -173,9 +182,9 @@ export default function DomainsPage() {
         </div>
 
         <div className="flex justify-end items-center gap-6 mt-auto pb-3">
-          <a href="#" className="font-bold text-sm">
+          <button onClick={handleAdditionalFilters} className="font-bold text-sm">
             + Additional filters
-          </a>
+          </button>
           <button
             onClick={handleNext}
             disabled={selected.length === 0}
