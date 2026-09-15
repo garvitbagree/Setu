@@ -2,21 +2,54 @@ import { PrismaClient } from "@prisma/client";
 
 const prisma = new PrismaClient();
 
-const mandates = [
-  { companyName: "Tata Consultancy Services", objective: "Digital literacy and school infrastructure for underserved children", domains: "Education", state: "Maharashtra", city: "Mumbai", budgetMin: 2000000, budgetMax: 5000000, yearsActiveMin: 5, projectTimeline: "1+ years", verificationRequired: "12A, 80G" },
-  { companyName: "Infosys Foundation", objective: "Rural healthcare access and maternal health programs", domains: "Healthcare", state: "Karnataka", city: "Bengaluru", budgetMin: 3000000, budgetMax: 8000000, yearsActiveMin: 3, projectTimeline: "6 months - 1 year", verificationRequired: "12A, 80G, FCRA" },
-  { companyName: "Wipro Cares", objective: "Reforestation and water conservation in drought-prone districts", domains: "Environment", state: "Tamil Nadu", city: "Chennai", budgetMin: 1500000, budgetMax: 4000000, yearsActiveMin: 2, projectTimeline: "1+ years", verificationRequired: "12A" },
-  { companyName: "HDFC Bank Parivartan", objective: "Skill development and livelihood generation for rural youth", domains: "Livelihood", state: "Gujarat", city: "Ahmedabad", budgetMin: 2500000, budgetMax: 6000000, yearsActiveMin: 3, projectTimeline: "6 months - 1 year", verificationRequired: "80G" },
-  { companyName: "Reliance Foundation", objective: "Disaster relief and rehabilitation infrastructure", domains: "Disaster Relief", state: "Maharashtra", city: "Pune", budgetMin: 5000000, budgetMax: 12000000, yearsActiveMin: 5, projectTimeline: "Under 3 months", verificationRequired: "12A, 80G, FCRA" },
-  { companyName: "Mahindra Group CSR", objective: "Women-led micro-enterprise incubation", domains: "Women Empowerment", state: "Delhi", city: "New Delhi", budgetMin: 1000000, budgetMax: 3000000, yearsActiveMin: 2, projectTimeline: "1+ years", verificationRequired: "12A, 80G" },
-  { companyName: "ICICI Foundation", objective: "Vocational training centres in tier-2 cities", domains: "Skill Development", state: "Uttar Pradesh", city: "Lucknow", budgetMin: 2000000, budgetMax: 4500000, yearsActiveMin: 3, projectTimeline: "6 months - 1 year", verificationRequired: "80G" },
-  { companyName: "Larsen & Toubro CSR", objective: "Sanitation and clean water infrastructure in rural schools", domains: "Sanitation", state: "West Bengal", city: "Kolkata", budgetMin: 1800000, budgetMax: 4200000, yearsActiveMin: 2, projectTimeline: "3-6 months", verificationRequired: "12A" },
-  { companyName: "Bajaj Finserv Foundation", objective: "Primary education support and digital classrooms", domains: "Education", state: "Karnataka", city: "Mysuru", budgetMin: 1200000, budgetMax: 3500000, yearsActiveMin: 2, projectTimeline: "1+ years", verificationRequired: "12A, 80G" },
-  { companyName: "Godrej CSR Cell", objective: "Affordable healthcare camps in peri-urban clusters", domains: "Healthcare", state: "Maharashtra", city: "Nagpur", budgetMin: 2200000, budgetMax: 5500000, yearsActiveMin: 4, projectTimeline: "6 months - 1 year", verificationRequired: "12A, 80G, FCRA" },
+const cities = [
+  { city: "Mumbai", state: "Maharashtra" }, { city: "Pune", state: "Maharashtra" }, { city: "Nagpur", state: "Maharashtra" },
+  { city: "Bengaluru", state: "Karnataka" }, { city: "Mysuru", state: "Karnataka" },
+  { city: "Chennai", state: "Tamil Nadu" }, { city: "Coimbatore", state: "Tamil Nadu" },
+  { city: "New Delhi", state: "Delhi" },
+  { city: "Hyderabad", state: "Telangana" },
+  { city: "Ahmedabad", state: "Gujarat" }, { city: "Surat", state: "Gujarat" },
+  { city: "Kolkata", state: "West Bengal" },
+  { city: "Jaipur", state: "Rajasthan" },
+  { city: "Lucknow", state: "Uttar Pradesh" }, { city: "Noida", state: "Uttar Pradesh" },
+  { city: "Bhopal", state: "Madhya Pradesh" },
 ];
 
+const domains = ["Education", "Environment", "Healthcare", "Livelihood", "Disaster Relief", "Women Empowerment", "Skill Development", "Sanitation"];
+const timelines = ["Under 3 months", "3-6 months", "6 months - 1 year", "1+ years"];
+
+const objectivesByDomain: Record<string, string[]> = {
+  Education: ["Digital literacy and school infrastructure for underserved children", "Scholarship and mentorship programs for first-generation learners", "Building libraries and learning centers in rural districts"],
+  Environment: ["Reforestation and water conservation in drought-prone districts", "Renewable energy access for rural communities", "Urban waste management and recycling infrastructure"],
+  Healthcare: ["Rural healthcare access and maternal health programs", "Mobile health clinics for underserved communities", "Nutrition and child health interventions"],
+  Livelihood: ["Skill development and livelihood generation for rural youth", "Micro-enterprise support for small farmers", "Artisan market access programs"],
+  "Disaster Relief": ["Disaster relief and rehabilitation infrastructure", "Flood-resistant housing construction", "Emergency preparedness training for vulnerable communities"],
+  "Women Empowerment": ["Women-led micro-enterprise incubation", "Legal aid and safety programs for women", "Vocational training centers for women re-entering the workforce"],
+  "Skill Development": ["Vocational training centres in tier-2 cities", "IT and digital skills bootcamps for unemployed youth", "Apprenticeship programs with local industry"],
+  Sanitation: ["Sanitation and clean water infrastructure in rural schools", "Community toilet construction programs", "Water purification access initiatives"],
+};
+
+const companies = [
+  "Tata Consultancy Services", "Infosys Foundation", "Wipro Cares", "HDFC Bank Parivartan",
+  "Reliance Foundation", "Mahindra Group CSR", "ICICI Foundation", "Larsen & Toubro CSR",
+  "Bajaj Finserv Foundation", "Godrej CSR Cell", "Aditya Birla CSR", "JSW Foundation",
+  "Adani Foundation", "Hindustan Unilever Foundation", "ITC CSR", "Cipla Foundation",
+  "Dr. Reddy's Foundation", "Sun Pharma CSR", "Axis Bank Foundation", "Kotak Mahindra CSR",
+  "State Bank of India Foundation", "Maruti Suzuki CSR", "Hero MotoCorp CSR", "Bharti Foundation",
+  "Vedanta CSR", "NTPC Foundation", "ONGC CSR", "Coal India CSR",
+  "Indian Oil Foundation", "Britannia CSR", "Nestle India CSR", "Colgate-Palmolive India CSR",
+  "Procter & Gamble India CSR", "Asian Paints CSR", "UltraTech Cement CSR",
+  "JSW Steel Foundation", "Tata Steel CSR", "Tata Power CSR", "Tata Motors CSR",
+  "Hindalco CSR", "Siemens India CSR", "Cognizant Foundation", "Accenture India CSR",
+  "HCL Foundation", "Tech Mahindra Foundation", "Genpact Cares", "Capgemini India CSR",
+  "DLF Foundation", "Yes Bank Foundation", "IndusInd Bank CSR", "L&T Finance CSR",
+];
+
+function pick<T>(arr: T[]): T {
+  return arr[Math.floor(Math.random() * arr.length)];
+}
+
 async function main() {
-  // Create or reuse a demo CSR user to own these mandates
   let demoUser = await prisma.user.findUnique({ where: { email: "csr-demo@setu.dev" } });
   if (!demoUser) {
     demoUser = await prisma.user.create({
@@ -26,13 +59,29 @@ async function main() {
 
   await prisma.cSRMandate.deleteMany({ where: { userId: demoUser.id } });
 
-  for (const m of mandates) {
+  for (const companyName of companies) {
+    const loc = pick(cities);
+    const domain = pick(domains);
+    const budgetMin = (Math.floor(Math.random() * 8) + 2) * 500000;
+
     await prisma.cSRMandate.create({
-      data: { ...m, userId: demoUser.id },
+      data: {
+        userId: demoUser.id,
+        companyName,
+        objective: pick(objectivesByDomain[domain]),
+        domains: domain,
+        state: loc.state,
+        city: loc.city,
+        budgetMin,
+        budgetMax: budgetMin + 1000000 + Math.floor(Math.random() * 3000000),
+        yearsActiveMin: Math.floor(Math.random() * 4) + 1,
+        projectTimeline: pick(timelines),
+        verificationRequired: pick(["12A, 80G", "12A, 80G, FCRA", "80G", "12A"]),
+      },
     });
   }
 
-  console.log(`Seeded ${mandates.length} CSR mandates under demo user ${demoUser.email}`);
+  console.log(`Seeded ${companies.length} CSR mandates under demo user ${demoUser.email}`);
 }
 
 main()
