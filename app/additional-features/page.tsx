@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
@@ -11,6 +11,14 @@ const verificationOptions = ["Any", "12A", "80G", "FCRA", "12A + 80G", "All (12A
 const impactOptions = ["Any", "100+", "500+", "1,000+", "5,000+", "10,000+"];
 
 export default function AdditionalFeaturesPage() {
+  return (
+    <Suspense fallback={<div className="min-h-screen bg-[#F7F5FC]" />}>
+      <AdditionalFeaturesContent />
+    </Suspense>
+  );
+}
+
+function AdditionalFeaturesContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
 

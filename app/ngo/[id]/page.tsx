@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 import { useParams, useRouter, useSearchParams } from "next/navigation";
 import Navbar from "../../components/Navbar";
 import Footer from "../../components/Footer";
@@ -36,6 +36,14 @@ type NGO = {
 };
 
 export default function NgoProfilePage() {
+  return (
+    <Suspense fallback={<div className="min-h-screen bg-[#F7F5FC]" />}>
+      <NgoProfileContent />
+    </Suspense>
+  );
+}
+
+function NgoProfileContent() {
   const params = useParams();
   const router = useRouter();
   const searchParams = useSearchParams();

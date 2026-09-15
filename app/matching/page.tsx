@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
@@ -18,6 +18,14 @@ type NGO = {
 };
 
 export default function MatchingPage() {
+  return (
+    <Suspense fallback={<div className="min-h-screen bg-[#F7F5FC]" />}>
+      <MatchingContent />
+    </Suspense>
+  );
+}
+
+function MatchingContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const [ngos, setNgos] = useState<NGO[]>([]);
