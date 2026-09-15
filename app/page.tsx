@@ -11,13 +11,14 @@ export default function Home() {
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
 
-  function redirectForRole(role: string | null | undefined) {
-    if (role === "ngo") {
-      window.location.href = "/ngo-register";
-    } else {
-      window.location.href = "/domains";
-    }
+  async function redirectForRole(role: string | null | undefined) {
+  if (role === "ngo") {
+    const res = await fetch("/api/ngo-me");
+    window.location.href = res.ok ? "/ngo-status" : "/ngo-register";
+  } else {
+    window.location.href = "/domains";
   }
+}
 
   async function handleCredentialsAuth(role: "csr" | "ngo") {
     setError("");
@@ -44,7 +45,7 @@ export default function Home() {
     if (result?.error) {
       setError("Invalid email or password");
     } else {
-      redirectForRole(role);
+      await redirectForRole(role);
     }
   }
 
@@ -107,7 +108,7 @@ export default function Home() {
           </div>
 
           <button
-            onClick={() => signIn("google", { callbackUrl: "/domains" })}
+            onClick={() => signIn("google", { callbackUrl: "/post-login" })}
             className="w-full rounded-full bg-field-grey px-5 py-2.5 mb-4 text-sm font-medium flex items-center justify-center gap-2"
           >
             Continue with Google

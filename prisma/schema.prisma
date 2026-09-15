@@ -9,24 +9,30 @@ datasource db {
 
 model NGO {
   id                Int      @id @default(autoincrement())
+  ownerUserId       Int?     @unique
   name              String
   verified          Boolean  @default(false)
+  verificationNote  String?
   domain            String
   city              String
   state             String
   address           String?
-  budgetMin         Int
-  budgetMax         Int
-  yearsActive       Int
-  impactMetric      String
-  description       String
+  budgetMin         Int      @default(0)
+  budgetMax         Int      @default(0)
+  yearsActive       Int      @default(0)
+  impactMetric      String   @default("")
+  description       String   @default("")
   photoUrl          String?
   has12A            Boolean  @default(false)
   has80G            Boolean  @default(false)
   hasFCRA           Boolean  @default(false)
+  reg12A            String?
+  reg80G            String?
+  regFCRA           String?
   pastCSRPartners   String?
   createdAt         DateTime @default(now())
 
+  owner             User?    @relation(fields: [ownerUserId], references: [id])
   shortlists        Shortlist[]
   eois              EOI[]
 }
@@ -80,6 +86,7 @@ model User {
 
   accounts      Account[]
   sessions      Session[]
+  ngo           NGO?
 }
 
 model Account {
