@@ -35,6 +35,9 @@ export default function MatchingPage() {
       setLoading(false);
     }
     load();
+    if (searchParams.toString()) {
+      sessionStorage.setItem("setu_last_filters", searchParams.toString());
+    }
   }, [searchParams]);
 
   const filtered = ngos.filter((n) =>
@@ -175,7 +178,7 @@ export default function MatchingPage() {
                     <span className="font-semibold">Domain:</span> {ngo.domain}
                   </p>
                   <p className="text-sm mb-4">
-                    <span className="font-semibold">Budget:</span> ₹{ngo.budgetMin.toLocaleString("en-IN")}
+                    <span className="font-semibold">Budget:</span> ₹{ngo.budgetMax.toLocaleString("en-IN")}
                   </p>
                   <div className="flex gap-2">
                     <button

@@ -8,7 +8,10 @@ export async function GET(
   { params }: { params: Promise<{ id: string }> }
 ) {
   const { id } = await params;
-  const ngo = await prisma.nGO.findUnique({ where: { id: Number(id) } });
+  const ngo = await prisma.nGO.findUnique({
+    where: { id: Number(id) },
+    include: { projects: { orderBy: { createdAt: "desc" } } },
+  });
 
   if (!ngo) {
     return NextResponse.json({ error: "Not found" }, { status: 404 });

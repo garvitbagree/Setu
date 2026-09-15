@@ -5,6 +5,14 @@ import { useParams, useRouter, useSearchParams } from "next/navigation";
 import Navbar from "../../components/Navbar";
 import Footer from "../../components/Footer";
 
+type Project = {
+  id: number;
+  title: string;
+  description: string;
+  status: string;
+  achievement: string | null;
+};
+
 type NGO = {
   id: number;
   name: string;
@@ -21,6 +29,10 @@ type NGO = {
   has80G: boolean;
   hasFCRA: boolean;
   pastCSRPartners: string | null;
+  teamSize: number | null;
+  boardMembers: string | null;
+  websiteUrl: string | null;
+  projects: Project[];
 };
 
 export default function NgoProfilePage() {
@@ -97,6 +109,10 @@ export default function NgoProfilePage() {
               <p className="text-xs text-muted mb-1">Years active</p>
               <p className="font-semibold">{ngo.yearsActive} years</p>
             </div>
+            <div className="rounded-2xl bg-white p-4">
+              <p className="text-xs text-muted mb-1">Team size</p>
+              <p className="font-semibold">{ngo.teamSize ? `${ngo.teamSize} people` : "—"}</p>
+            </div>
           </div>
 
           <div className="md:col-span-2 flex flex-col gap-6">
@@ -121,12 +137,45 @@ export default function NgoProfilePage() {
                     .filter(Boolean)
                     .join(", ") || "None on file"}
                 </p>
+                <p>
+                  <span className="font-semibold block text-muted text-xs mb-0.5">Website</span>
+                  {ngo.websiteUrl || "—"}
+                </p>
+                <p>
+                  <span className="font-semibold block text-muted text-xs mb-0.5">Board members</span>
+                  {ngo.boardMembers || "—"}
+                </p>
                 <p className="col-span-2">
                   <span className="font-semibold block text-muted text-xs mb-0.5">Past CSR partners</span>
                   {ngo.pastCSRPartners || "—"}
                 </p>
               </div>
             </div>
+
+            {/* Projects card */}
+            {ngo.projects && ngo.projects.length > 0 && (
+              <div className="rounded-2xl bg-white p-6">
+                <h3 className="font-bold text-lg mb-4">Projects</h3>
+                <div className="flex flex-col gap-3">
+                  {ngo.projects.map((p) => (
+                    <div key={p.id} className="bg-field-grey rounded-xl p-4">
+                      <p className="font-semibold flex items-center gap-2">
+                        {p.title}
+                        <span className={`text-xs px-2 py-0.5 rounded-full ${p.status === "completed" ? "bg-lime text-navy" : "bg-lavender text-white"}`}>
+                          {p.status}
+                        </span>
+                      </p>
+                      {p.description && <p className="text-sm text-muted mt-1">{p.description}</p>}
+                      {p.achievement && (
+                        <p className="text-sm mt-1">
+                          <span className="font-semibold">Achievement:</span> {p.achievement}
+                        </p>
+                      )}
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
 
             {/* EOI card */}
             <div className="rounded-2xl bg-white p-6">

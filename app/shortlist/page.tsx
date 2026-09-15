@@ -95,7 +95,7 @@ export default function ShortlistPage() {
                     onClick={() => router.push(`/ngo/${entry.ngoId}`)}
                     className="rounded-full bg-lime px-5 py-2 text-sm font-bold"
                   >
-                    Send EOI →
+                    View details →
                   </button>
                 </div>
               </div>

@@ -13,6 +13,7 @@ type NGO = {
   city: string;
   description: string;
   budgetMin: number;
+  budgetMax: number;
   matchScore: number;
 };
 
@@ -226,7 +227,7 @@ export default function QuickMatchPage() {
                   </p>
                   <div className="flex justify-between text-white/90 text-sm mt-3">
                     <span>📍 {current.city}</span>
-                    <span>$ Budget: ₹{current.budgetMin.toLocaleString("en-IN")}</span>
+                    <span>$ Budget: ₹{current.budgetMax.toLocaleString("en-IN")}</span>
                   </div>
                 </div>
               </div>

@@ -38,6 +38,9 @@ export async function PATCH(req: Request) {
       budgetMin: body.budgetMin ?? ngo.budgetMin,
       budgetMax: body.budgetMax ?? ngo.budgetMax,
       pastCSRPartners: body.pastCSRPartners ?? ngo.pastCSRPartners,
+      teamSize: body.teamSize ?? ngo.teamSize,
+      boardMembers: body.boardMembers ?? ngo.boardMembers,
+      websiteUrl: body.websiteUrl ?? ngo.websiteUrl,
     },
   });
 

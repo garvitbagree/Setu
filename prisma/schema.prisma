@@ -30,16 +30,36 @@ model NGO {
   reg80G            String?
   regFCRA           String?
   pastCSRPartners   String?
+  teamSize          Int?
+  boardMembers      String?
+  websiteUrl        String?
   createdAt         DateTime @default(now())
 
   owner             User?    @relation(fields: [ownerUserId], references: [id])
   shortlists        Shortlist[]
-  eois              EOI[]
+  eois              EOI[]        @relation
+  sentEois          EOI[]        @relation("NgoSentEois")
+  projects          NgoProject[]
+}
+
+model NgoProject {
+  id          Int      @id @default(autoincrement())
+  ngoId       Int
+  title       String
+  description String   @default("")
+  status      String   @default("ongoing") // "ongoing" | "completed"
+  achievement String?
+  startedAt   DateTime?
+  createdAt   DateTime @default(now())
+
+  ngo         NGO      @relation(fields: [ngoId], references: [id])
 }
 
 model CSRMandate {
   id                    Int      @id @default(autoincrement())
-  userId                String
+  userId                Int
+  companyName           String
+  objective             String   @default("")
   domains               String
   state                 String
   city                  String
@@ -49,6 +69,9 @@ model CSRMandate {
   projectTimeline       String?
   verificationRequired  String?
   createdAt             DateTime @default(now())
+
+  user                  User     @relation(fields: [userId], references: [id])
+  eois                  EOI[]
 }
 
 model Shortlist {
@@ -64,14 +87,20 @@ model Shortlist {
 
 model EOI {
   id              Int      @id @default(autoincrement())
-  fromUserId      String
-  toNgoId         Int
+  direction       String   @default("csr_to_ngo") // "csr_to_ngo" | "ngo_to_csr"
+  fromUserId      String?
+  fromNgoId       Int?
+  toNgoId         Int?
+  toUserId        Int?
+  toMandateId     Int?
   message         String
   proposedBudget  Int?
   status          String   @default("pending")
   createdAt       DateTime @default(now())
 
-  ngo             NGO      @relation(fields: [toNgoId], references: [id])
+  ngo             NGO?         @relation(fields: [toNgoId], references: [id])
+  fromNgo         NGO?         @relation("NgoSentEois", fields: [fromNgoId], references: [id])
+  mandate         CSRMandate?  @relation(fields: [toMandateId], references: [id])
 }
 
 model User {
@@ -87,6 +116,7 @@ model User {
   accounts      Account[]
   sessions      Session[]
   ngo           NGO?
+  mandates      CSRMandate[]
 }
 
 model Account {
