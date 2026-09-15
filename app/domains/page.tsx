@@ -11,6 +11,10 @@ const domainImages: Record<string, string> = {
   Environment: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQNezmyavgTDYryay4C3bsEmDNeM56FQbPn1YfZSjBWYhAi1EOd7BaJvRs&s=10",
   Healthcare: "https://as1.ftcdn.net/jpg/11/65/39/20/220_F_1165392074_hI37vcKPJYVFcT5eetDHM4OgWUJvEEjB.jpg",
   Livelihood: "https://static.vecteezy.com/system/resources/previews/080/395/995/non_2x/indian-farmer-crouches-to-harvest-crops-by-hand-using-a-sickle-emphasizing-traditional-farming-practices-vector.jpg",
+  "Disaster Relief": "https://picsum.photos/seed/disaster-relief/400/300",
+  "Women Empowerment": "https://picsum.photos/seed/women-empowerment/400/300",
+  "Skill Development": "https://picsum.photos/seed/skill-development/400/300",
+  Sanitation: "https://picsum.photos/seed/sanitation/400/300",
 };
 
 const initialDomains = ["Education", "Environment", "Healthcare", "Livelihood"];
@@ -69,24 +73,24 @@ export default function DomainsPage() {
     <main className="h-screen bg-[#F7F5FC] w-full flex flex-col overflow-hidden">
       <Navbar />
 
-      <div className="px-8 lg:px-24 py-4 flex-1 flex flex-col min-h-0">
+      <div className="px-8 lg:px-24 py-3 flex-1 flex flex-col min-h-0">
         {/* Progress bar */}
-        <div className="w-full h-4 rounded-full bg-white border-2 border-lavender overflow-hidden mb-2 mt-4">
+        <div className="w-full h-4 rounded-full bg-white border-2 border-lavender overflow-hidden mb-2 mt-3">
           <div className="h-full bg-lavender rounded-full w-1/2" />
         </div>
-        <p className="text-right text-sm text-muted mb-4">1/2</p>
+        <p className="text-right text-sm text-muted mb-3">1/2</p>
 
-        <h1 className="font-sans font-extrabold text-4xl mb-2">
+        <h1 className="font-sans font-extrabold text-3xl mb-1">
           Hola <span className="text-deep-purple">{firstName}.</span>
         </h1>
-        <p className="text-lg mb-6">What NGO domains are you searching for?</p>
+        <p className="text-base mb-4">What NGO domains are you searching for?</p>
 
-        <div className="flex gap-4 mb-3">
+        <div className={`grid gap-4 mb-2 ${showMore ? "grid-cols-4 grid-rows-2" : "grid-cols-4"}`}>
           {allDomains.map((domain) => (
             <button
               key={domain}
               onClick={() => toggleDomain(domain)}
-              className={`relative rounded-2xl overflow-hidden h-36 flex-1 bg-skeleton-grey text-left ${
+              className={`relative rounded-2xl overflow-hidden h-28 bg-skeleton-grey text-left ${
                 selected.includes(domain) ? "ring-4 ring-lavender" : ""
               }`}
               style={{
@@ -105,14 +109,14 @@ export default function DomainsPage() {
         {!showMore && (
           <button
             onClick={() => setShowMore(true)}
-            className="text-right block ml-auto font-semibold mb-4"
+            className="text-right block ml-auto font-semibold mb-3 text-sm"
           >
             Load more...
           </button>
         )}
 
-        <p className="text-lg font-semibold mb-3 mt-2">What geography are you looking for?</p>
-        <div className="flex gap-4 mb-4 relative">
+        <p className="text-base font-semibold mb-2 mt-2">What geography are you looking for?</p>
+        <div className="flex gap-4 mb-3 relative">
           <div className="relative">
             <input
               type="text"
@@ -124,7 +128,7 @@ export default function DomainsPage() {
               }}
               onFocus={() => setStateFocused(true)}
               onBlur={() => setTimeout(() => setStateFocused(false), 150)}
-              className="rounded-full bg-field-grey px-5 py-2.5 text-sm outline-none w-60"
+              className="rounded-full bg-field-grey px-5 py-2 text-sm outline-none w-60"
             />
             {stateFocused && state && stateOptions.length > 0 && (
               <div className="absolute top-full mt-1 w-60 bg-white rounded-xl shadow-lg z-10 overflow-hidden">
@@ -150,7 +154,7 @@ export default function DomainsPage() {
               onFocus={() => setCityFocused(true)}
               onBlur={() => setTimeout(() => setCityFocused(false), 150)}
               disabled={!state}
-              className="rounded-full bg-field-grey px-5 py-2.5 text-sm outline-none w-60 disabled:opacity-50"
+              className="rounded-full bg-field-grey px-5 py-2 text-sm outline-none w-60 disabled:opacity-50"
             />
             {cityFocused && cityOptions.length > 0 && (
               <div className="absolute top-full mt-1 w-60 bg-white rounded-xl shadow-lg z-10 overflow-hidden">
@@ -168,7 +172,7 @@ export default function DomainsPage() {
           </div>
         </div>
 
-        <div className="flex justify-end items-center gap-6 mt-auto pb-4">
+        <div className="flex justify-end items-center gap-6 mt-auto pb-3">
           <a href="#" className="font-bold text-sm">
             + Additional filters
           </a>

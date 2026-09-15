@@ -49,7 +49,6 @@ export default function QuickMatchPage() {
 
   const current = ngos[index];
   const next = ngos[index + 1];
-  const nextNext = ngos[index + 2];
   const done = index >= ngos.length;
 
   const shortlistedCount = history.filter((h) => h.action === "shortlisted").length;
@@ -77,7 +76,7 @@ export default function QuickMatchPage() {
       setIndex((i) => i + 1);
       setExitDirection(null);
       setAnimating(false);
-    }, 300);
+    }, 280);
   }
 
   async function handleUndo() {
@@ -97,48 +96,44 @@ export default function QuickMatchPage() {
   }
 
   return (
-    <main className="min-h-screen bg-[#F7F5FC] w-full flex flex-col">
+    <main className="h-screen bg-gradient-to-br from-[#F0EBFA] to-[#F7F5FC] w-full flex flex-col overflow-hidden">
       <Navbar />
-      <div className="px-8 lg:px-24 py-6 flex-1 flex flex-col">
+      <div className="px-8 lg:px-24 py-4 flex-1 flex flex-col min-h-0">
         <div className="flex items-center justify-between mb-2">
-          <h1 className="font-sans font-extrabold text-3xl">Quick match</h1>
-          <div className="flex gap-3">
+          <h1 className="font-sans font-extrabold text-2xl">Quick match</h1>
+          <div className="flex gap-4">
+            <button
+              onClick={() => router.push(`/matching?${searchParams.toString()}`)}
+              className="text-sm font-semibold text-muted hover:text-navy transition"
+            >
+              ← Back to results
+            </button>
             <button
               onClick={() => router.push("/shortlist")}
-              className="text-sm font-semibold text-muted"
+              className="text-sm font-semibold text-muted hover:text-navy transition"
             >
               Shortlist →
             </button>
             <button
               onClick={() => router.push("/compare")}
-              className="text-sm font-semibold text-muted"
+              className="text-sm font-semibold text-muted hover:text-navy transition"
             >
               Compare →
-            </button>
-            <button
-              onClick={() => router.push(`/matching?${searchParams.toString()}`)}
-              className="text-sm font-semibold text-muted"
-            >
-              ← Back to results
             </button>
           </div>
         </div>
 
         {!loading && ngos.length > 0 && (
-          <div className="flex items-center gap-3 mb-4 text-sm">
-            <span className="rounded-full bg-white px-4 py-1.5 font-medium">
-              💚 {shortlistedCount}
-            </span>
-            <span className="rounded-full bg-white px-4 py-1.5 font-medium">
-              ✕ {skippedCount}
-            </span>
-            <span className="rounded-full bg-white px-4 py-1.5 font-medium">
+          <div className="flex items-center gap-2 mb-3 text-xs">
+            <span className="rounded-full bg-white shadow-sm px-3 py-1 font-medium">💚 {shortlistedCount}</span>
+            <span className="rounded-full bg-white shadow-sm px-3 py-1 font-medium">✕ {skippedCount}</span>
+            <span className="rounded-full bg-white shadow-sm px-3 py-1 font-medium">
               {Math.min(index + 1, ngos.length)} / {ngos.length}
             </span>
             {history.length > 0 && (
               <button
                 onClick={handleUndo}
-                className="rounded-full bg-white border border-gray-300 px-4 py-1.5 font-semibold text-muted flex items-center gap-1"
+                className="rounded-full bg-white shadow-sm border border-gray-200 px-3 py-1 font-semibold text-muted"
               >
                 ↺ Undo
               </button>
@@ -149,34 +144,34 @@ export default function QuickMatchPage() {
         {loading ? (
           <p className="text-muted">Loading NGOs...</p>
         ) : done ? (
-          <div className="flex-1 flex flex-col items-center justify-center gap-6">
-            <p className="text-2xl font-bold">
+          <div className="flex-1 flex flex-col items-center justify-center gap-5">
+            <p className="text-xl font-bold">
               {ngos.length === 0 ? "No NGOs matched your filters" : "You've seen all matches"}
             </p>
-            <div className="flex gap-4">
+            <div className="flex gap-3">
               {history.length > 0 && (
                 <button
                   onClick={handleUndo}
-                  className="rounded-full bg-white border border-gray-300 px-8 py-3 font-bold"
+                  className="rounded-full bg-white border border-gray-300 px-6 py-2.5 text-sm font-bold"
                 >
                   ↺ Undo last
                 </button>
               )}
               <button
                 onClick={() => router.push("/shortlist")}
-                className="rounded-full bg-navy text-white px-8 py-3 font-bold"
+                className="rounded-full bg-navy text-white px-6 py-2.5 text-sm font-bold"
               >
-                View your shortlist
+                View shortlist
               </button>
               <button
                 onClick={() => router.push("/compare")}
-                className="rounded-full bg-lavender px-8 py-3 font-bold"
+                className="rounded-full bg-lavender px-6 py-2.5 text-sm font-bold"
               >
-                Compare shortlisted
+                Compare
               </button>
               <button
                 onClick={() => router.push(`/matching?${searchParams.toString()}`)}
-                className="rounded-full bg-white border border-gray-300 px-8 py-3 font-bold"
+                className="rounded-full bg-white border border-gray-300 px-6 py-2.5 text-sm font-bold"
               >
                 Back to results
               </button>
@@ -184,87 +179,103 @@ export default function QuickMatchPage() {
           </div>
         ) : (
           <>
-            <div className="flex-1 flex items-center justify-center gap-4 overflow-hidden">
-              {/* left ghost stack (already-decided cards, faded) */}
-              <div className="w-24 h-72 rounded-2xl bg-skeleton-grey opacity-30 shrink-0" />
-              <div className="w-32 h-80 rounded-2xl bg-skeleton-grey opacity-40 shrink-0" />
+            <div className="flex-1 flex items-center justify-center gap-10 min-h-0">
+              {/* Left info panel — fills the empty space, gives context */}
+              <div className="hidden lg:flex flex-col gap-4 w-64 shrink-0">
+                <div className="bg-white/70 backdrop-blur-sm rounded-2xl p-5 shadow-sm">
+                  <p className="text-xs text-muted mb-1">Currently viewing</p>
+                  <p className="font-bold text-lg">{current.name}</p>
+                  <p className="text-sm text-muted mt-1">{current.domain}</p>
+                </div>
+                <div className="bg-white/70 backdrop-blur-sm rounded-2xl p-5 shadow-sm">
+                  <p className="text-xs text-muted mb-2">How it works</p>
+                  <p className="text-sm">Swipe left to skip, right to shortlist. Use undo if you change your mind.</p>
+                </div>
+              </div>
 
-              {/* active card */}
-              <div
-                className="relative w-[420px] h-[560px] shrink-0 rounded-3xl overflow-hidden shadow-2xl transition-all duration-300 ease-in"
-                style={{
-                  transform:
-                    exitDirection === "left"
-                      ? "translateX(-120%) rotate(-8deg)"
-                      : exitDirection === "right"
-                      ? "translateX(120%) rotate(8deg)"
-                      : "translateX(0) rotate(0deg)",
-                  opacity: exitDirection ? 0 : 1,
-                }}
-              >
-                <img
-                  src={imageFor(current)}
-                  alt={current.name}
-                  className="absolute inset-0 w-full h-full object-cover"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/10 to-transparent" />
+              <div className="relative w-full max-w-sm h-full max-h-[400px]">
+                {next && (
+                  <div className="absolute inset-0 translate-y-2 scale-[0.96] rounded-3xl overflow-hidden opacity-50">
+                    <img src={imageFor(next)} alt="" className="w-full h-full object-cover" />
+                  </div>
+                )}
 
-                <span className="absolute top-4 right-4 bg-black/60 text-yellow-400 text-sm font-bold italic px-3 py-1 rounded-full">
-                  {current.matchScore}% match
-                </span>
+                <div
+                  className="relative w-full h-full rounded-3xl overflow-hidden shadow-xl transition-all duration-[280ms] ease-in"
+                  style={{
+                    transform:
+                      exitDirection === "left"
+                        ? "translateX(-130%) rotate(-10deg)"
+                        : exitDirection === "right"
+                        ? "translateX(130%) rotate(10deg)"
+                        : "translateX(0) rotate(0deg)",
+                    opacity: exitDirection ? 0 : 1,
+                  }}
+                >
+                  <img
+                    src={imageFor(current)}
+                    alt={current.name}
+                    className="absolute inset-0 w-full h-full object-cover"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/20 to-black/0" />
 
-                <div className="absolute bottom-0 left-0 right-0 px-6 py-6">
-                  <p className="text-white font-extrabold text-3xl flex items-center gap-2">
-                    {current.name}
-                    {current.verified && (
-                      <span className="bg-white/20 rounded-full w-6 h-6 flex items-center justify-center text-sm">
-                        ✔
-                      </span>
-                    )}
-                  </p>
-                  <p className="text-white/90 text-sm italic my-2 max-w-sm">
-                    {current.description}
-                  </p>
-                  <div className="flex justify-between text-white/90 text-sm mt-3">
-                    <span>📍 {current.city}</span>
-                    <span>$ Budget: ₹{current.budgetMax.toLocaleString("en-IN")}</span>
+                  <span className="absolute top-3 right-3 bg-black/60 backdrop-blur-sm text-yellow-400 text-xs font-bold italic px-3 py-1 rounded-full">
+                    {current.matchScore}% match
+                  </span>
+                  {current.verified && (
+                    <span className="absolute top-3 left-3 bg-white/20 backdrop-blur-sm rounded-full w-7 h-7 flex items-center justify-center text-white text-sm">
+                      ✔
+                    </span>
+                  )}
+
+                  <div className="absolute bottom-0 left-0 right-0 px-5 py-4">
+                    <p className="text-white font-extrabold text-2xl leading-tight">
+                      {current.name}
+                    </p>
+                    <p className="text-white/85 text-xs italic mt-1 mb-2 line-clamp-2">
+                      {current.description}
+                    </p>
+                    <div className="flex justify-between items-center text-white/90 text-xs border-t border-white/20 pt-2">
+                      <span>📍 {current.city}</span>
+                      <span className="font-semibold">₹{current.budgetMax.toLocaleString("en-IN")}</span>
+                    </div>
                   </div>
                 </div>
               </div>
 
-              {/* right ghost stack (upcoming cards) */}
-              <div className="w-32 h-80 rounded-2xl overflow-hidden opacity-40 shrink-0 bg-skeleton-grey">
-                {next && (
-                  <img
-                    src={imageFor(next)}
-                    alt=""
-                    className="w-full h-full object-cover"
-                  />
-                )}
-              </div>
-              <div className="w-24 h-72 rounded-2xl overflow-hidden opacity-25 shrink-0 bg-skeleton-grey">
-                {nextNext && (
-                  <img
-                    src={imageFor(nextNext)}
-                    alt=""
-                    className="w-full h-full object-cover"
-                  />
+              {/* Right actions panel — fills empty space with controls */}
+              <div className="hidden lg:flex flex-col gap-4 w-64 shrink-0">
+                <button
+                  onClick={() => router.push(`/ngo/${current.id}`)}
+                  className="bg-white/70 backdrop-blur-sm rounded-2xl p-5 shadow-sm text-left hover:bg-white transition"
+                >
+                  <p className="font-semibold text-sm mb-1">View full profile</p>
+                  <p className="text-xs text-muted">See projects, team, and registrations before deciding.</p>
+                </button>
+                {history.length > 0 && (
+                  <button
+                    onClick={handleUndo}
+                    className="bg-white/70 backdrop-blur-sm rounded-2xl p-5 shadow-sm text-left hover:bg-white transition"
+                  >
+                    <p className="font-semibold text-sm mb-1">↺ Undo last action</p>
+                    <p className="text-xs text-muted">Bring back the previous card.</p>
+                  </button>
                 )}
               </div>
             </div>
 
-            <div className="flex justify-center gap-8 mt-6 pb-6">
+            <div className="flex justify-center items-center gap-6 py-3 shrink-0">
               <button
                 onClick={() => advance("skipped", "left")}
                 disabled={animating}
-                className="w-16 h-16 rounded-full bg-white border-2 border-danger text-danger text-2xl font-bold flex items-center justify-center shadow-md hover:scale-105 transition disabled:opacity-50"
+                className="w-12 h-12 rounded-full bg-white border-2 border-danger text-danger text-lg font-bold flex items-center justify-center shadow-md hover:scale-110 active:scale-95 transition disabled:opacity-50"
               >
                 ✕
               </button>
               <button
                 onClick={() => advance("shortlisted", "right")}
                 disabled={animating}
-                className="w-16 h-16 rounded-full bg-lime text-navy text-2xl font-bold flex items-center justify-center shadow-md hover:scale-105 transition disabled:opacity-50"
+                className="w-12 h-12 rounded-full bg-lime text-navy text-lg font-bold flex items-center justify-center shadow-md hover:scale-110 active:scale-95 transition disabled:opacity-50"
               >
                 ♥
               </button>

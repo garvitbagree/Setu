@@ -75,14 +75,22 @@ export default function NgoStatusPage() {
                 <p className="font-bold text-lg">Verified</p>
                 <p className="text-sm text-muted mb-4">{ngo.verificationNote}</p>
                 <p className="text-sm mb-4">
-                  Your organisation is now discoverable by CSR managers. Complete your profile so they see your full story, impact, and budget fit.
+                  Your organisation is now discoverable by CSR managers. Keep your profile current so they see your full story, impact, and budget fit.
                 </p>
-                <button
-                  onClick={() => router.push("/ngo-profile-builder")}
-                  className="rounded-full bg-lavender px-8 py-3 font-bold"
-                >
-                  Build your profile
-                </button>
+                <div className="flex gap-3">
+                  <button
+                    onClick={() => router.push("/ngo-profile-builder")}
+                    className="rounded-full bg-lavender px-8 py-3 font-bold"
+                  >
+                    Update your profile
+                  </button>
+                  <button
+                    onClick={() => router.push("/browse-mandates")}
+                    className="rounded-full bg-white border border-gray-300 px-8 py-3 font-bold"
+                  >
+                    Browse CSR mandates
+                  </button>
+                </div>
               </div>
             </div>
           ) : (
